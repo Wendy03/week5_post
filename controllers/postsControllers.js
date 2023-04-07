@@ -19,7 +19,11 @@ const posts = {
   },
   async createPost(req, res, next) {
     const { user, content, image, createdAt } = req.body;
-    if (content !== undefined) {
+    if (user === undefined) {
+      return appError(400, 'user 必填', next);
+    } else if (content === undefined) {
+      return appError(400, 'content 必填', next);
+    } else {
       const newPost = await Post.create({
         user,
         content,
@@ -27,8 +31,6 @@ const posts = {
         createdAt,
       });
       successHandler(res, newPost);
-    } else {
-      return appError(400, 'content 必填', next);
     }
   },
 };
